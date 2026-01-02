@@ -1,0 +1,21 @@
+/
+{
+	ether_device {
+		compatible = "ether-based";
+			
+		clocks = <&cpsw_125mhz_gclk>,
+				 <&cpsw_125mhz_clkctrl AM3_CPSW_125MHZ_CPGMAC0_CLKCTRL 0>,
+				 <&cpsw_cpts_rft_clk>;
+		clock-names = "fck-ether", "fck-mdio", "fck-cpts";
+
+		/* "rx_thresh", "rx", "tx", "misc" */
+		interrupts-extended = <&intc 40>,
+							  <&intc 41>,
+							  <&intc 42>,
+							  <&intc 43>;
+
+		syscon = <&scm_conf>;
+							  
+		status = "okay";
+	};
+};
