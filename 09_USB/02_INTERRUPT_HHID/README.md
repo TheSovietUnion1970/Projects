@@ -1,0 +1,3 @@
+- USB for interrupt hhid
+- mouse movement in full speed
+- Before loading usb.ko, it's recommended to remove musb_dsps out of kernel or unbind usb modules (maybe by editing device tree in usb@1800)
