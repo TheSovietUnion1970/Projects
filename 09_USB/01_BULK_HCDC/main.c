@@ -31,24 +31,32 @@ void print_arr(u8* d, u16 len, u8* name){
 
 static void re_request_irq_work(struct work_struct *work){
     struct usb_device_data *data = container_of(work, struct usb_device_data, re_request_work);
-    int ret;
+    int ret, i = 0;
 
-    // send data to arduino device
-    printk("Sending OutData to Ardino ... \n");
-    ret = USB1_OUT_Phase_Bulk(data, 4, 0x1, OutData, sizeof(OutData));
+    for (i = 0; i < LOOP; i++){
+        // send data to arduino device
+        printk("Sending OutData to Ardino ... %d times\n", i);
+        ret = USB1_OUT_Phase_Bulk(data, 4, 0x1, OutData, sizeof(OutData));
 
-    // read data from arduino device
-    printk("Receving InData from Ardino ... \n");
-    while(!data->isEnd) {
-        if (ret == 0) ret = USB1_IN_Phase_Bulk(data, 3, 0x1, InData, &InDataLen);
-        if (ret < 0) break;
-        if (data->isEnd) break;
-    };
+        // read data from arduino device
+        printk("Receving InData from Ardino ... \n");
+        while(!data->isEnd) {
+            if (ret == 0) ret = USB1_IN_Phase_Bulk(data, 3, 0x1, InData, &InDataLen);
+            if (ret < 0) break;
+            if (data->isEnd) break;
+        };
 
-    print_arr(InData, data->RX_index, "InData");
-    // reset
-    data->isEnd = 0;
-    data->RX_index = 0;
+        print_arr(InData, data->RX_index, "InData");
+        
+        // reset
+        data->isEnd = 0;
+        data->RX_index = 0;
+        data->count_many = 0;
+
+        printk("=======================\n");
+
+        msleep(200);
+    }
 
 }
 
