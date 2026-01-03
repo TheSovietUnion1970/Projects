@@ -1,0 +1,32 @@
+/
+{
+	usb1_device {
+		compatible = "usb1-based";
+		
+		reg = <0x47400000 0x1000>,
+			  <0x47401b00 0x100>,
+			  <0x47401800 0x200>,
+			  <0x47401c00 0x400>;
+		reg-names = "usb1_ss", "usb1_phy", "usb1_ctl", "usb1_mc";
+		
+		clocks = <&l3s_clkctrl AM3_L3S_USB_OTG_HS_CLKCTRL 0>;
+		clock-names = "fck-usb1";
+
+		ti,sysc-delay-us = <2>;
+
+		/* For PHY */
+		ti,ctrl_mod = <&usb_ctrl_mod>;
+
+		/* For CTL */
+		mentor,multipoint = <1>;
+		mentor,num-eps = <16>;
+		mentor,ram-bits = <12>;
+		mentor,power = <500>;
+
+		/* Combine USB1 (USBSS) interrupts */
+		interrupts-extended = <&intc 19>,
+							  <&intc 17>;
+							  
+		status = "okay";
+	};
+};
