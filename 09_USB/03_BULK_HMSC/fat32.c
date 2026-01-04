@@ -369,7 +369,7 @@ int USB1_f_Mount(struct usb_device_data *data){
     u32 partition_entry_offset = 0x01BE;
 
     /* Read sector 0 */
-    ret = USB1_Read_SECTOR_DATA(data, 0x0, 1, Glob_Sector_data, &Sector_data_len, "Sector 0", 0, 0);
+    ret = USB1_Read_SECTOR_DATA(data, 0x0, 1, Glob_Sector_data, &Sector_data_len, "Sector 0", 0, PRINT_DATA);
     if (ret == 0){
         USB1_Get_String(Glob_Sector_data + 3, bpb_instance.OME_name, 8);
 #if (PRINT_DEBUG)

@@ -382,22 +382,22 @@ void USB1_Print_CSW(struct usb_device_data *data, u8* name){
 
 void USB1_Print_SCSI_Inquiry(struct usb_device_data *data){
     u64 tmp[4];
-    printk("# ----------------------------------- #\n");
+    printk("# ------------- USB_INFO ------------ #\n");
     printk("# additional_length = 0x%x\n", data->scsi_inquiry.additional_length);
-    USB1_Print_String(data->scsi_inquiry.vendor_id, 8, "vendor_id");
-    USB1_Print_String(data->scsi_inquiry.product_id, 16, "product_id");
-    USB1_Print_String(data->scsi_inquiry.product_revision, 4, "product_revision");
+    USB1_Print_String(data->scsi_inquiry.vendor_id, 8, "# vendor_id");
+    USB1_Print_String(data->scsi_inquiry.product_id, 16, "# product_id");
+    USB1_Print_String(data->scsi_inquiry.product_revision, 4, "# product_revision");
 
     data->scsi_inquiry.LBA = swap_endian32(data->scsi_inquiry.LBA);
     data->scsi_inquiry.Capacity = swap_endian32(data->scsi_inquiry.Capacity);
-    printk("# Logical block address(LBA) = 0x%x\n", data->scsi_inquiry.LBA);
+    //printk("# Logical block address(LBA) = 0x%x\n", data->scsi_inquiry.LBA);
     printk("# block size = 0x%x\n", data->scsi_inquiry.Capacity);
 
     tmp[0] = data->scsi_inquiry.LBA;
     tmp[1] = data->scsi_inquiry.Capacity;
     tmp[2] = tmp[0]*tmp[1];
     tmp[3] = div_u64(tmp[2], 1000000000ULL);
-    printk("# => Total = %lld bytes | ~ %lld GB\n", tmp[2], tmp[3]);
+    printk("# => Total = %lld bytes | ~ %lld GB\n", tmp[2], tmp[3] + 1);
     printk("# ----------------------------------- #\n");
 }
 
@@ -503,7 +503,7 @@ int USB1_CBW(struct usb_device_data *data){
 
     /* Print result */
     if (ret == 0){
-#if (PRINT_DEBUG)
+#if (PRINT_USB_INFO)
         USB1_Print_SCSI_Inquiry(data);
         USB1_Print_EAA_Instance(data, "cbw_EAA_Instance");
 #endif
