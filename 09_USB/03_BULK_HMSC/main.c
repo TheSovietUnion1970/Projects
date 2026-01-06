@@ -144,7 +144,7 @@ void Test_phase_4(struct usb_device_data *data){
     }
 }
 
-static void re_request_irq_work(struct work_struct *work){
+static void requested_work(struct work_struct *work){
     struct usb_device_data *data = container_of(work, struct usb_device_data, re_request_work);
     int ret;
 
@@ -154,6 +154,7 @@ static void re_request_irq_work(struct work_struct *work){
         printk("Failed at USB1_f_Mount\n");
     }
 
+    /* Put the func/test for handling files/folders here */
     if (ret == 0){
         Test_phase_1(data);
         // Test_phase_2(data);
@@ -302,7 +303,7 @@ static int usb1_probe(struct platform_device *pdev)
 
     //musb_init_controller_V(data);
 
-    INIT_WORK(&data->re_request_work, re_request_irq_work);
+    INIT_WORK(&data->re_request_work, requested_work);
     atomic_set(&data->should_stop, 0); // Initialize to 0 (false)
 
     msleep(1000);
@@ -379,3 +380,4 @@ module_platform_driver(usb_device_driver);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Soviet");
 MODULE_DESCRIPTION("Custom USB1 Device Driver for BeagleBone Black USB1");
+
