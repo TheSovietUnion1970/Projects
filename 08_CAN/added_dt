@@ -1,0 +1,34 @@
+&am33xx_pinmux {
+    can0_pins: pinmux_can0_pins {
+        pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE2) /* P9_19: can0_rx */
+            AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_OUTPUT_PULLUP, MUX_MODE2) /* P9_20: can0_tx */
+        >;
+    };
+};
+
+/
+{
+	can0_device {
+		compatible = "can0-based";
+		
+		reg = <0x481cc000 0x1000>;  // Single region for the entire CAN0 peripheral
+		
+		clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
+				 <&l3_clkctrl AM3_L3_TPCC_CLKCTRL 0>; /* DMA */
+		clock-names = "fck-can0", "fck-dma";
+
+		/*pinctrl-names = "default";
+		pinctrl-0 = <&can0_pins>;*/
+
+		/* DMA */
+		dmas = <&edma 40 0>,
+			   <&edma 41 0>;
+		dma-names = "if1_dma", "if2_dma";
+
+		/* Combine CAN0 interrupts */
+		interrupts-extended = <&intc 52>;
+							  
+		status = "okay";
+	};
+};
