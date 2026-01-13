@@ -1,6 +1,6 @@
-- CAN for remote frame (BBB is requested by Arduino sending remote frame to BBB)
+- CAN for remote frame (BBB is requested by Arduino [can_request.ino] sending remote frame to BBB)
 - Use Arduino for testing communication between Arduino and BeagleBoneBlack by sending remote frame to BBB and BBB sending responding data frame back to arduino 
 - In main.h:
- + ID_CAN_TARGET is target ID (Ex ID Can of Arduino)
- + DMA_USED is used to set/unset to use DMA in CAN
- + PRINT_DEBUG is used to print debug printk
+ - ID_CAN_TARGET is target ID (Ex ID Can of Arduino)
+ - DMA_USED is used to set/unset to use DMA in CAN
+ - PRINT_DEBUG is used to print debug printk
