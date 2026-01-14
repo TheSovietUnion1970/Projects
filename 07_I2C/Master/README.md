@@ -9,3 +9,6 @@ In main.h:
 I2C pins:
  - P9_17: i2c1_scl
  - P9_18: i2c1_sda
+ 
+Test:
+ - Write data into /dev/i2c1: 'echo "Hi everyone!" | sudo tee /dev/i2c1'
