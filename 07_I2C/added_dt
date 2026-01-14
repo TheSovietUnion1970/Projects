@@ -1,0 +1,37 @@
+&am33xx_pinmux {
+    i2c1_pins: pinmux_i2c1_pins {
+        pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_SPI0_CS0, PIN_INPUT_PULLUP, MUX_MODE2) /* P9_17: i2c1_scl */
+            AM33XX_PADCONF(AM335X_PIN_SPI0_D1, PIN_INPUT_PULLUP, MUX_MODE2) /* P9_18: i2c1_sda */
+        >;
+    };
+};
+
+
+/
+{
+	i2c1_device {
+		compatible = "i2c1-based";
+		
+		reg = <0x4802a000 0x1000>;  // Single region for the entire SPI1 peripheral
+		
+		clock-frequency = <48000000>;
+		clocks = <&l4ls_clkctrl AM3_L4LS_I2C2_CLKCTRL 0>,
+				 <&l3_clkctrl AM3_L3_TPCC_CLKCTRL 0>;
+		clock-names = "fck-i2c1", "fck-dma";
+
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&i2c1_pins>;
+
+		dmas = <&edma 60 0
+			    &edma 61 0>;
+		dma-names = "tx1", "rx1";
+
+		/* Combine I2c1 interrupts */
+		interrupts-extended = <&intc 71>;
+							  
+		status = "okay";
+
+	};
+};
