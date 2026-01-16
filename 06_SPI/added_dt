@@ -1,0 +1,73 @@
+&am33xx_pinmux {
+    spi0_pins: pinmux_spi0_pins {
+        pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_SPI0_CS0, PIN_OUTPUT_PULLUP, MUX_MODE0) /* P9_17: spi0_cs0 */
+            AM33XX_PADCONF(AM335X_PIN_SPI0_D0, PIN_INPUT_PULLUP, MUX_MODE0) /* P9_21: spi0_d0 */
+			AM33XX_PADCONF(AM335X_PIN_SPI0_D1, PIN_OUTPUT_PULLUP, MUX_MODE0) /* P9_18: spi0_d1 */
+			AM33XX_PADCONF(AM335X_PIN_SPI0_SCLK, PIN_OUTPUT_PULLUP, MUX_MODE0) /* P9_22: spi0_sclk */
+        >;
+    };
+
+    spi1_pins: pinmux_spi1_pins {
+        pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKR, PIN_INPUT_PULLUP, MUX_MODE3) /* P9_28: spi1_cs0 */
+			/*AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT_PULLUP, MUX_MODE4)*/ /* P9_19: spi1_cs1 */
+
+            AM33XX_PADCONF(AM335X_PIN_MCASP0_FSX, PIN_INPUT_PULLUP, MUX_MODE3) /* P9_29: spi1_d0 */
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, PIN_OUTPUT_PULLUP, MUX_MODE3) /* P9_30: spi1_d1 */
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKX, PIN_INPUT_PULLUP, MUX_MODE3) /* P9_31: spi1_sclk */
+        >;
+    };
+};
+
+/
+{
+	spi0_device {
+		compatible = "spi0-based";
+		
+		reg = <0x48030000 0x400>;  // Single region for the entire SPI0 peripheral
+		
+		clocks = <&l4ls_clkctrl AM3_L4LS_SPI0_CLKCTRL 0>,
+				 <&l3_clkctrl AM3_L3_TPCC_CLKCTRL 0>;
+		clock-names = "fck-spi0", "fck-dma";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&spi0_pins>;
+
+		dmas = <&edma 16 0>;
+		dma-names = "tx1";
+
+		/* Combine GPIO1 and SPI0 interrupts */
+		interrupts-extended = <&intc 65>,
+							  <&intc 12>, <&intc 13>, <&intc 14>;
+
+		status = "okay";
+
+	};
+};
+
+/
+{
+	spi1_device {
+		compatible = "spi1-based";
+		
+		reg = <0x481a0000 0x400>;  // Single region for the entire SPI1 peripheral
+		
+		clocks = <&l4ls_clkctrl AM3_L4LS_SPI1_CLKCTRL 0>,
+				 <&l3_clkctrl AM3_L3_TPCC_CLKCTRL 0>;
+		clock-names = "fck-spi1", "fck-dma";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&spi1_pins>;
+
+		dmas = <&edma 43 0>;
+		dma-names = "rx1";
+
+		/* Combine GPIO1 and SPI0 interrupts */
+		interrupts-extended = <&intc 125>,
+							  <&intc 12>, <&intc 13>, <&intc 14>;
+							  
+		status = "okay";
+
+	};
+};
