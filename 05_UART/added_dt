@@ -1,0 +1,41 @@
+&am33xx_pinmux {
+    uart1_pins: pinmux_uart1_pins {
+        pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_UART1_RXD, PIN_INPUT_PULLUP, MUX_MODE0) /* P9_26: uart1_rxd */
+            AM33XX_PADCONF(AM335X_PIN_UART1_TXD, PIN_OUTPUT_PULLDOWN, MUX_MODE0) /* P9_24: uart1_txd */
+        >;
+    };
+};
+
+/
+{
+	uart1_device {
+		compatible = "uart1-based";
+		
+
+		dmas = <&edma 28 0>, <&edma 29 0>;
+		dma-names = "tx111", "rx111";
+
+		dma-requests = <64>;
+        #dma-cells = <2>;
+        ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>, <&edma_tptc2 0>;
+		ti,edma-memcpy-channels = <20 21>;
+
+
+		reg = <0x48022000 0x1000>;  // Single region for the entire UART4 peripheral
+		
+		clocks = <&l3_clkctrl AM3_L3_TPCC_CLKCTRL 0>,
+				 <&l4ls_clkctrl AM3_L4LS_UART2_CLKCTRL 0>;
+		clock-names = "fck_dma", "fck_uart1";
+
+		clock-frequency = <48000000>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&uart1_pins>;
+
+		/* Combine GPIO1 and UART1 interrupts */
+		interrupts-extended = <&intc 73>;      /* UART1 interrupt, main intc */
+
+		status = "okay";
+	};
+};
